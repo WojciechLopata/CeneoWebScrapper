@@ -55,9 +55,12 @@ def extraction(product_id):
             url=None
 
     ##print(author,recomendation,opinion_id,stars,content,usefull,useless,published,purchased,sep="\n")
-    with open(f"app/opinions/{product_id}.json","w",encoding="UTF-8") as file:
+    with open(f"opinions/{product_id}.json","w",encoding="UTF-8") as file:
         json.dump(all_opinions,file,indent=4,ensure_ascii=False)
-    return redirect (url_for("extraction",product_id=product_id))
+    return redirect (url_for("product",product_id=product_id))
 @app.route("/products")
 def products():
     pass
+@app.route('/product/<product_id>')
+def product(product_id):
+    return render_template("product.html.jinja", product_id=product_id)
