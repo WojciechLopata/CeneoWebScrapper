@@ -4,6 +4,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import os
+import numpy as np
 from numpy import average
 import pandas as pd
 from matplotlib import colors, pyplot as plt
@@ -94,7 +95,7 @@ def product(product_id):
         labels=["Nie polecam","Polecam","Nie mam zdania"]
     )
     plt.title("Rekomendacje")
-    plt.savefig(f"app/plots/{id}_recomendation.png")
+    plt.savefig(f"app/plots/{product_id}_recomendation.png")
     plt.close()
     stars=opinions["stars"].value_counts().reindex(list(np.arange(0,5.5,0.5)),fill_value=0)
     stars.plot.bar(
@@ -106,6 +107,6 @@ def product(product_id):
     plt.ylabel("liczba opinii")
     plt.grid(True,axis="y")
     plt.xticks(rotation=0)
-    plt.savefig(f"app/plots/{id}_stars.png")
+    plt.savefig(f"app/plots/{product_id}_stars.png")
     plt.close()            
     return render_template("product.html.jinja", product_id=product_id,opinions=opinions)
