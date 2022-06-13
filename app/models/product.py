@@ -1,6 +1,7 @@
 from app.models import opinion
 from BeautifulSoup import bs4
 import requests
+from app.routes import product
 from app.utils import get_item
 import os
 import numpy as np
@@ -47,10 +48,10 @@ class Product():
     
         opinions=opinions_to_df()
         opinions["stars"]=opinions["stars"].map(lambda x: float(x.split('/')[0].replace(",",".")))
-            self.opinions_count=len(opinions),
-            self.pros_count= opinions["pros"].map(bool).sum(),
-            self.cons_count=opinions["cons"].map(bool).sum(),
-            self.average_score=opinions["stars"].mean().round(2),
+        self.opinions_count=len(opinions),
+        self.pros_count= opinions["pros"].map(bool).sum(),
+        self.cons_count=opinions["cons"].map(bool).sum(),
+        self.average_score=opinions["stars"].mean().round(2),
         return self
     def draw_charts(self):
 
@@ -80,11 +81,16 @@ class Product():
         plt.close()            
         return self
     def __str__(self):
-        pass
+        obiekt=self.product_name+self.product_id+self.average_score
+        return obiekt
     def __repr__(self):
-        pass
+        return self.to_dict()
     def to_dict(self):
-        pass
+        return {"author": self.author,
+        "recomendation":self.recomenadtion,
+        "average score":self.average_score,
+        "pros":self.pros,
+        "cons":self.cons,}
     def export_opinions(self):
         
         if not (os.path.exists("app/opinions")):

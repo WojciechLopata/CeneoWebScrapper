@@ -19,14 +19,21 @@ class Opinion():
         self.cons=cons
         self.publish_date=purchase_date
         self.opinion_id=opinion_id
+        self.purchase_date=purchase_date
     def extract_opinion(self):
         for key,value in selectors.items():
-            setattr(self,key,key:get item(opinion, *value))
+            setattr(self, key, get_item(opinion, *value))
         self.opinion_id=opinion["date-entry-id"]
         return self
     def __str__(self):
-        pass
+        return self.extract_opinion()
     def __repr__(self):
-        pass
+        return self.to_dict()
     def to_dict(self):
-        pass
+        return {"author": self.author,
+        "recomendation":self.recomenadtion,
+        "stars":self.stars,
+        "pros":self.pros,
+        "cons":self.cons,
+        "publish date":self.publish_date,
+        "purchase date":self.purchase_date}
