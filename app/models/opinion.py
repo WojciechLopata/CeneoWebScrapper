@@ -31,6 +31,7 @@ class Opinion():
         return self.to_dict()
     def to_dict(self):
         return {"author": self.author,
+        "id":self.opinion_id,
         "recomendation":self.recomenadtion,
         "stars":self.stars,
         "pros":self.pros,

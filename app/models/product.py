@@ -87,7 +87,7 @@ class Product():
         return self.to_dict()
     def to_dict(self):
         return {"author": self.author,
-        "recomendation":self.recomenadtion,
+        "id":self.product_id,
         "average score":self.average_score,
         "pros":self.pros,
         "cons":self.cons,}
