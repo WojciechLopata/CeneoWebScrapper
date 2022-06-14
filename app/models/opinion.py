@@ -1,6 +1,6 @@
 from app.parameters import selectors
 from app.models import opinion
-from BeautifulSoup import bs4
+from bs4 import BeautifulSoup
 import requests
 from app.utils import get_item
 import os
@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd 
 import json
 class Opinion():
-    def __init__(self,opinion_id,author="",recomenadtion=None,stars=0,content="",useful=0,useless=0,publish_date=None,purchase_date=None,pros=[],cons=[]):
+    def __init__(self,opinion_id=0,author="",recomenadtion=None,stars="",content="",useful=0,useless=0,publish_date=None,purchase_date=None,pros=[],cons=[]):
         self.author=author
         self.recomenadtion=recomenadtion
         self.stars=stars
@@ -20,17 +20,15 @@ class Opinion():
         self.publish_date=purchase_date
         self.opinion_id=opinion_id
         self.purchase_date=purchase_date
-    def extract_opinion(self):
+    def extract_opinion(self,opinion):
         for key,value in selectors.items():
             setattr(self, key, get_item(opinion, *value))
-        self.opinion_id=opinion["date-entry-id"]
+        self.opinion_id=opinion["data-entry-id"]
         return self
     def __str__(self):
-        str="autor"+self.author+"id"+self.id+"rekomendacja"+self.recomendation+"gwiazdki"+self.stars+"zalety"+self.pros+"wady"+self.cons+"data publikacji+self.publish_date+"data zakupu"+self.purchase_date
-        return str
-   
+        return f"opinion_id: {self.opinion_id}<br>" + "<br>".join(f"{key}: {str(getattr(self, key))}" for key in selectors.keys())
     def __repr__(self):
-        return self.to_dict()
+        return f"Opinion(opinion_id={self.opinion_id}, " + ", ".join(f"{key}={str(getattr(self, key))}" for key in selectors.keys()) + ")"
     def to_dict(self):
         return {"author": self.author,
         "id":self.opinion_id,

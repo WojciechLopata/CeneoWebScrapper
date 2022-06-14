@@ -36,8 +36,11 @@ def extraction():
     product.extract_name()
     if(product.product_name):
         product.extract_opinions().calculate_stats().draw_charts()
-    else: 
-        pass
+        product.export_opinions()
+        product.export_product()
+    else:
+        error="coś się zepsuło"
+        return render_template(url_for("extract.html.jinja",error=error))
     
     if not (os.path.exists("app/opinions")):
         os.makedirs("app/opinions")
@@ -52,4 +55,8 @@ def products():
     return render_template ("products.html.jinja",products=products)
 @app.route('/product/<product_id>')
 def product(product_id):
-    return render_template("product.html.jinja", product_id=product_id,opinions=opinions)
+    product=Product(product_id)
+    product.import_product()
+    stats=product.stats_to_dict()
+    opinions=product.opinions_to_df()
+    return render_template("product.html.jinja", product_id=product_id)
