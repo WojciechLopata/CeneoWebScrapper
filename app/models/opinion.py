@@ -26,10 +26,9 @@ class Opinion():
         self.opinion_id=opinion["date-entry-id"]
         return self
     def __str__(self):
-        str="autor"+self.author+"id"+self.id+"rekomendacja"+
-self.recomendation+"gwiazdki"+self.stars+"zalety"+self.pros+"wady"+self.cons+"data publikacji+self.publish_date+"data zakupu"+self.purchase_date
+        str="autor"+self.author+"id"+self.id+"rekomendacja"+self.recomendation+"gwiazdki"+self.stars+"zalety"+self.pros+"wady"+self.cons+"data publikacji+self.publish_date+"data zakupu"+self.purchase_date
         return str
-        return 
+   
     def __repr__(self):
         return self.to_dict()
     def to_dict(self):
