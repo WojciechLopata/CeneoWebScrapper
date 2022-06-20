@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd 
 import json
 from app.models.opinion import Opinion
+from matplotlib import pyplot as plt
 class Product():
     def __init__(self,product_id,opinions=[],product_name="",opinions_count=0,average_score=0,pros=[],cons=[]):
         self.product_id=product_id
@@ -57,7 +58,9 @@ class Product():
         return self
     def draw_charts(self): 
         opinions = self.opinions_to_df()
-        recomendation=opinions["recomendation"].value_counts(dropna=False).sort_index().reindex("Nie polecam","polecam",None,fill_value=0)
+        for recomendation in opinions["recomendation"]:
+            print(type(recomendation))
+        recomendation=opinions["recomendation"].value_counts(dropna=False).sort_index().reindex(["Nie polecam","polecam",None],fill_value=0)
         recomendation.plot.pie(
             label="", 
             autopct="%1.1f%%", 
@@ -116,7 +119,7 @@ class Product():
         
         if not (os.path.exists("app/opinions")):
             os.makedirs("app/opinions")
-        with open(f"app/opinions/{product_id}.json","w",encoding="UTF-8") as file:
+        with open(f"app/opinions/{self.product_id}.json","w",encoding="UTF-8") as file:
             json.dump([opinion.to_dict for opinion in self.opinions()],file,indent=4,ensure_ascii=False)
         pass
     def export_product(self):
@@ -126,16 +129,15 @@ class Product():
             json.dump(self.stats_to_dict)
     def import_product(self):
         if os.path.exists(f"app/products/{self.product_id}.json"):
-            with open(f"app/products/{self.product_id}.json","r",encoding="UTF-8") as file:
-                product=json.load(file)
-                self.product_id=product_id
-                self.product_name=product_name
-                self.opinions=opinions
-                self.opinions_count=opinions_count
-                self.average_score=average_score
-                self.pros=pros
-                self.cons=cons
-            with open(f"app/products/{self.product_id}.json","r",encoding="UTF-8") as file:
-               opinion=json.load(file)
-               for opinion in opinions:
-                   self.opinions.append(Opinion(**opinion))
+            with open(f"app/products/{self.product_id}.json", "r", encoding="UTF-8") as jf:
+                product = json.load(jf)
+                self.product_id = product["product_id"]
+                self.product_name = product["product_name"]
+                self.opinions_count = product["opinions_count"]
+                self.pros_count = product["pros_count"]
+                self.cons_count = product["cons_count"]
+                self.average_score = product["average_score"]
+            with open(f"app/opinions/{self.product_id}.json", "r", encoding="UTF-8") as jf:
+                opinions = json.load(jf)
+                for opinion in opinions:
+                    self.opinions.append(Opinion(**opinion))
