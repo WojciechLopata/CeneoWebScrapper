@@ -7,6 +7,9 @@ import os
 import pandas as pd
 from matplotlib import colors, pyplot as plt
 from app.models.product import Product
+from app.models.simple import table_maker
+from flask import send_file
+
 
 selectors={
             "author":["span.user-post__author-name"],
@@ -34,6 +37,8 @@ def extraction():
         product = Product(product_id)
         product.extract_name()
         if product.product_name:
+            product.extract_opinions().calculate_stats()
+
             product.extract_opinions().calculate_stats().draw_charts()
             product.export_opinions()
             product.export_product()
@@ -45,12 +50,31 @@ def extraction():
         return render_template("extract.html.jinja")
 @app.route("/products")
 def products():
-    products=[filename.split(".")[0] for filename in os.listdir("app/opinions")]
-    return render_template ("products.html.jinja",products=products)
+    products=[filename.split(".")[0] for filename in os.listdir("app/opinions/json")]
+    stats={}
+    print(products)
+    for product in products:
+        id=product
+        product=Product(product)
+        product.import_product()
+        stats[id]=(product.list_helper())
+
+    print(stats)
+
+    return render_template ("products.html.jinja",products=products,stats=stats)
 @app.route('/product/<product_id>')
 def product(product_id):
     product=Product(product_id)
     product.import_product()
     stats=product.stats_to_dict()
     opinions=product.opinions_to_df()
-    return render_template("product.html.jinja", product_id=product_id)
+    table=table_maker(product_id)
+    print(stats)
+
+    return render_template("product.html.jinja", product_id=product_id,table=table)
+@app.route('/download/<product>.<format>')    
+def download (path,product,format):
+    path=path+product+"."+format
+    print(path)
+    #For windows you need to use drive name [ex: F:/Example.pdf]
+    return send_file(path,as_attachment=True)

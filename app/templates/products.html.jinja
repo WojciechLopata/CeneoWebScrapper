@@ -5,6 +5,13 @@
     {% for product in products %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <a class="nav-link" href="{{url_for('product',product_id=product)}}"><i class="bibi-door-open-fill"></i>{{product}}</a>
+            <a>{{stats[product]}}</a>
+            <br>
+            <br>
+            <a href="{{url_for('download',path="/app/opinions/csv/",product=product, format="csv")}}">CSV  </a>
+            <a href="\app\opinions\json/{{product}}.json">json</a>
+            <a href="\app\opinions\excel/{{product}}.xlsx">Excel</a>
+
         <span class = "badge bg-secondary rounded-pill">{{loop.index}}</span>
         </li>
     {% endfor %}

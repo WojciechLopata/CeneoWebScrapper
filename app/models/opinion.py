@@ -7,6 +7,7 @@ import os
 import numpy as np
 import pandas as pd 
 import json
+from flask_table import Table,Col
 class Opinion():
     def __init__(self, author="", recommendation=None, stars=0, content="", useful=0, useless=0, publish_date=None, purchase_date=None, pros=[], cons=[], opinion_id=""):
         self.author = author
@@ -24,6 +25,7 @@ class Opinion():
         for key,value in selectors.items():
             setattr(self, key, get_item(opinion, *value))
         self.opinion_id=opinion["data-entry-id"]
+        
         return self
     def __str__(self) -> str:
         return f"opinion_id: {self.opinion_id}<br>" + "<br>".join(f"{key}: {str(getattr(self, key))}" for key in selectors.keys())
