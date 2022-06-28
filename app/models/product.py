@@ -22,6 +22,7 @@ class Product():
         self.pros_count = pros_count
         self.cons_count = cons_count
         self.average_score = average_score
+        self.problem=False
 
     def extract_name(self):
         url=f"https://www.ceneo.pl/{self.product_id}#tab=reviews"
@@ -32,14 +33,13 @@ class Product():
 
     def extract_opinions(self):
         url=f"https://www.ceneo.pl/{self.product_id}#tab=reviews"
-        all_opinions=[]
         while(url):
     
             response= requests.get(url)
             page = BeautifulSoup(response.text, 'html.parser')
             opinions = page.select("div.js_product-review")
+            print("extract_opinions len before",len(self.opinions))
             for opinion in opinions:
-        
                 single_opinion = Opinion().extract_opinion(opinion)
                 self.opinions.append(single_opinion)
                 item=Opinion().extract_opinion(opinion).to_dict
@@ -50,17 +50,27 @@ class Product():
                 url="https://www.ceneo.pl"+page.select_one("a.pagination__next")["href"]
             except TypeError:
                 url=None      
+        print("extract_opinions len after",len(self.opinions))
         return self
     def opinions_to_df(self):
         opinions = pd.read_json(json.dumps(self.opinions_to_dict()))
-        opinions["stars"] = opinions["stars"].map(
-            lambda x: float(x.split('/')[0].replace(",", ".")))
+        if opinions.empty:
+            self.problem=True
+            
+            return False
+        opinions["stars"] = opinions["stars"].map(lambda x: float(x.split('/')[0].replace(",", ".")))
         return opinions
 
 
     def calculate_stats(self):
         opinions = self.opinions_to_df()
+        if(self.problem):
+            return False
         self.opinions_count = len(opinions)
+        if(self.opinions_count==0):
+            return False
+        print("calculate",self.opinions_count)
+
         self.pros_count = int(opinions["pros"].map(bool).sum())
         self.cons_count = int(opinions["cons"].map(bool).sum())
         self.average_score = opinions["stars"].mean().round(2)
@@ -107,7 +117,7 @@ class Product():
                 return f"Product(product_id={self.product_id}, product_name={self.product_name}, opinions_count={self.opinions_count}, pros_count={self.pros_count}, cons_count={self.cons_count}, average_score={self.average_score}, opinions: [" + ", ".join(opinion.__repr__() for opinion in self.opinions) + "])"
     def list_helper(self):
                 self.calculate_stats()
-                return f"Nazwa: {self.product_name}, Liczba opinii: {self.opinions_count}, liczba zalet: {self.pros_count}, liczba wad: {self.cons_count}, średnia ocena: {self.average_score}"
+                return [ self.product_name, f"Liczba opinii: {self.opinions_count}, liczba zalet: {self.pros_count}, liczba wad: {self.cons_count}, średnia ocena: {self.average_score}"]
     def to_dict(self) -> dict:
         return {
             "product_id": self.product_id,
@@ -119,6 +129,7 @@ class Product():
             "opinions": [opinion.to_dict() for opinion in self.opinions]
         }
     def opinions_to_dict(self):
+        print("to dict",len(self.opinions))
         return [opinion.to_dict() for opinion in self.opinions]
 
     def stats_to_dict(self):
@@ -136,15 +147,14 @@ class Product():
             os.makedirs("app/opinions")
             os.makedirs("app/opinions/json")
             os.makedirs("app/opinions/csv")
-            os.makedirs("app/opinions/excel")
+            os.makedirs("app/opinions/xlsx")
         with open(f"app/opinions/json/{self.product_id}.json","w",encoding="UTF-8") as file:
             json.dump(self.opinions_to_dict(),file,indent=4,ensure_ascii=False)
         opinions = pd.read_json(f"app/opinions/json/{self.product_id}.json",orient='records')
         with open(f"app/opinions/csv/{self.product_id}.csv",'w',encoding="UTF-8") as file:
             csvData = opinions.to_csv(index=False)
-            print(csvData)
             file.write(csvData)
-        opinions.to_excel(f"app/opinions/excel/{self.product_id}.xlsx")
+        opinions.to_excel(f"app/opinions/xlsx/{self.product_id}.xlsx")
         
         
     def export_product(self):
@@ -164,10 +174,12 @@ class Product():
                 self.cons_count = product["cons_count"]
                 self.average_score = product["average_score"]
             with open(f"app/opinions/json/{self.product_id}.json", "r", encoding="UTF-8") as jf:
-
+                self.opinions=[]
                 opinions = json.load(jf)
+                print("import produkt",len(opinions))
                 for opinion in opinions:
                     self.opinions.append(Opinion(**opinion))
+                print("import produkt",len(self.opinions))
             
 
                 

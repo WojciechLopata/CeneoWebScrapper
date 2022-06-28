@@ -1,0 +1,7 @@
+{% extends "base.html.jinja" %}
+{% block content %}
+<a class="nav-link" href="{{url_for('product',product_id=product_id)}}"><i class="bibi-door-open-fill"></i>wróć do produktu</a>
+<img src="/static/plots/{{product_id}}_recommendations.png">
+<img src="/static/plots/{{product_id}}_stars.png">
+{% endblock content %}
+   

@@ -3,16 +3,20 @@
 {% block content %}
 <ul class="list-group">
     {% for product in products %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <a class="nav-link" href="{{url_for('product',product_id=product)}}"><i class="bibi-door-open-fill"></i>{{product}}</a>
-            <a>{{stats[product]}}</a>
+        <li class="list-group-item  justify-content-between align-items-center">
+        <div class="row">
+          <div class="col-1"><span class = "badge bg-secondary rounded-pill">{{loop.index}}</span> </div>
+          <div class="col">  <a class="nav-link" href="{{url_for('product',product_id=product)}}"><i class="bibi-door-open-fill"></i>{{stats[product][0]}}</a> </div>
+           <div class="col"> <a>{{stats[product][1]}}</a></div>
             <br>
             <br>
-            <a href="{{url_for('download',path="/app/opinions/csv/",product=product, format="csv")}}">CSV  </a>
-            <a href="\app\opinions\json/{{product}}.json">json</a>
-            <a href="\app\opinions\excel/{{product}}.xlsx">Excel</a>
-
+            <div class="col">
+            <a href="{{url_for('download',format='csv',product=product)}}">Csv</a>
+            <a href="{{url_for('download',format='json',product=product)}}">json</a>
+            <a href="{{url_for('download',format='xlsx',product=product)}}">Excel</a>
         <span class = "badge bg-secondary rounded-pill">{{loop.index}}</span>
+        </div>
+        </div>
         </li>
     {% endfor %}
 </ul>

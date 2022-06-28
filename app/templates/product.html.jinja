@@ -1,6 +1,6 @@
 {% extends "base.html.jinja" %}
 
 {% block content %}
-<p>{{product_id}}</p>
+<a href="{{url_for('charts',product_id=product_id)}}">Wykresy </a>
 <p>{{table}}</p>
 {% endblock content %}
