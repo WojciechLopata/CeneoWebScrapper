@@ -1,4 +1,66 @@
 {% extends "base.html.jinja" %}
 
 {% block content %}
+<div class="row">
+    <div class="col-8 border-dark border-end pt-4 text-start ps-4"><a>Celem projektu było stworzenie aplikacji webowej pobierającej opinie o produktach z ceneo.pl</a>
+            <a> 1. Pobranie elementów pojedyńczej opinii do niezależnych zmiennych  </a>
+             <a>   2. Zapisanie wszystkich elementów pojeduńczej opinnii do jednej zmiennej (słownink)</a>
+              <a> 3. Pobranie wszystkich opinii z pojedyńczej strony do słowników i dodanie ich do listy</a>
+                <a> 4. Pobranie wszystkich opinii z wszystkich stron i zapisanie ich do pliku .json</a>
+                    <a>   5. Dodanie możliwości podania id produktu przez użytkownika za pomocą klawiatury </a>
+                    <a>  6. Refaktoryzacja \(optymalizacja\) kodu:</a>
+                            <a>      a. utworzenie funkcji do pobierania składowych strony html</a>
+                                <a>      b. utworzenie słownika opisującego strukturą opinii wraz z selektorami poszczególnych elementów</a>
+                                    <a>     c.zamiana instrukcji pobierającyc składowe opinii do pojedynczych zmiennych i tworzących z nich słownik na wyrażenie słownikowe \(dictionary comprehension\)</a>
+                                        <a>       tworzące słownik reprezentujący pojedynczą opinię na podstawie słownika selektorów</a>
+                                            <a>     7. analiza opinii o wybranym produkcie</a>
+                                                                    <a>          4. średnia ilość gwiazdek</a>
+                                                                        <a>      3. przygotowanie wykresów na podstawie zawartośći opinii </a>
+                                                                            <a>         1. udział poszczególnymh rekomendacji w ogólnej liczbie opinii</a>
+                                                                                <a>         2. histogram częstości występowania poszczególnych ocen (liczby gwiazdek)</a>
+                                                                                  <a>8 Stworzenie za pomocą jinji i flaska strony obsługującej pobieranie (jak najbardziej idiotoodporne jak się da) i wyświetlanie danych związanych z produktem oraz zapisywanie tych danych w zorganizowany sposób</a>
+                                                                                   <a>9. Utworzenie listy wszstkich pobranych produktów oraz danych z nimi związanych, umożliwiającej pobranie opinii tego produktu jak i usunięcie go z listy </a>
+                                                    <a>10.Utworzenie Tablicy oraz wyświetlenie wykresów na temat opinii danego produktu </a>
+                                            
+                                            
+                        </div>
+    <div class="col-4 pt-4 pe-4"> <a> Lista wykorzstanych bibliotek oraz ich wersje:
+                            <br>
+                            <a>appdata==2.1.2
+<br>Babel==2.10.3
+<br>beautifulsoup4==4.11.0
+<br>certifi==2021.10.8
+<br>charset-normalizer==2.0.12
+<br>click==8.1.3
+<br>colorama==0.4.4
+<br>cycler==0.11.0
+<br>Flask==2.1.2
+<br>Flask-Babel==2.0.0
+<br>Flask-Table==0.5.0
+<br>fonttools==4.33.3
+<br>idna==3.3
+<br>importlib-metadata==4.11.3
+<br>itsdangerous==2.1.2
+<br>Jinja2==3.1.2
+<br>kiwisolver==1.4.2
+<br>MarkupSafe==2.1.1
+<br>matplotlib==3.5.2
+<br>numpy==1.22.3
+<br>packaging==21.3
+<br>pandas==1.4.2
+<br>Pillow==9.1.0
+<br>pyparsing==3.0.8
+<br>python-dateutil==2.8.2
+<br>pytz==2022.1
+<br>requests==2.27.1
+<br>six==1.16.0
+<br>soupsieve==2.3.2
+<br>to-requirements.txt==1.1.8
+<br>urllib3==1.26.9
+<br>Werkzeug==2.1.2
+<br>zipp==3.8.0
+<br>
+</a></div>
+  </div>
+ 
 {% endblock content %}

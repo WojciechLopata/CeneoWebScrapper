@@ -1,6 +1,6 @@
 {% extends "base.html.jinja" %}
 
 {% block content %}
-<a href="{{url_for('charts',product_id=product_id)}}">Wykresy </a>
+<button class="btn btn-primary" type="button" onclick="window.location.href='{{ url_for( 'charts',product_id=product_id) }}';">Wykresy</button>
 <p>{{table}}</p>
 {% endblock content %}

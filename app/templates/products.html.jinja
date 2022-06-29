@@ -14,7 +14,7 @@
             <a href="{{url_for('download',format='csv',product=product)}}">Csv</a>
             <a href="{{url_for('download',format='json',product=product)}}">json</a>
             <a href="{{url_for('download',format='xlsx',product=product)}}">Excel</a>
-        <span class = "badge bg-secondary rounded-pill">{{loop.index}}</span>
+        <a href="{{url_for('product_delete',product_id=product)}}"> &#128465; Usuń</a>
         </div>
         </div>
         </li>

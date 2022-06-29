@@ -8,13 +8,38 @@ import os
 import pandas as pd
 from matplotlib import colors, pyplot as plt
 from app.models.product import Product
-from app.models.simple import table_maker
+from app.models.sortable import table_maker
 from flask import send_file
 from wtforms import IntegerField, SubmitField,StringField
 from wtforms.validators import DataRequired ,Length
 from flask_wtf import FlaskForm
+from flask_table import Table, Col
 
 app.config["SECRET_KEY"]="Admin"
+class SortableTable(Table):
+    def __init__(self,product_id, items, classes=None, thead_classes=None, sort_by=None, sort_reverse=False, no_items=None, table_id=None, border=None, html_attrs=None):
+        self.product_id=product_id
+        super().__init__(items, classes, thead_classes, sort_by, sort_reverse, no_items, table_id, border, html_attrs)
+    opinion_id = Col('ID')
+    author = Col("author")
+    recommendation = Col("recommendation")
+    stars = Col("stars")
+    content =Col(" content")
+    useful =Col(" useful")
+    useless =Col(" useless")
+    publish_date = Col('publish_date')
+    purchase_date = Col('purchase_date')
+    pros =Col( 'pros')
+    cons = Col('cons')
+    allow_sort = True
+    classes=["table table-bordered"]
+
+    def sort_url(self, col_key, reverse=False):
+        if reverse:
+            direction = 'desc'
+        else:
+            direction = 'asc'
+        return url_for('product',product_id=self.product_id,direction=direction,sort=col_key)
 
 
 # Create a Form Class
@@ -83,13 +108,47 @@ def products():
         stats[id]=(product.list_helper())
 
     return render_template ("products.html.jinja",products=products,stats=stats)
+@app.route("/product/delete-<product_id>")
+def product_delete(product_id):
+    os.remove(f"app/opinions/json/{product_id}.json")
+    os.remove(f"app/opinions/csv/{product_id}.csv")
+    os.remove(f"app/opinions/xlsx/{product_id}.xlsx")
+    os.remove(f"app/static/plots/{product_id}_recommendations.png")
+    os.remove(f"app/static/plots/{product_id}_stars.png")
+    products=[filename.split(".")[0] for filename in os.listdir("app/opinions/json")]
+    stats={}
+
+    for product in products:
+        id=product
+        product=Product(product)
+        product.import_product()
+        stats[id]=(product.list_helper())
+
+    return render_template ("products.html.jinja",products=products,stats=stats)
+    
+
+
 @app.route('/product/<product_id>')
 def product(product_id):
     product=Product(product_id)
     product.import_product()
     stats=product.stats_to_dict()
     opinions=product.opinions_to_df()
-    table=table_maker(product_id)
+    opinions = pd.read_json(f"app/opinions/json/{product_id}.json",orient='records')
+    df = pd.DataFrame(opinions, columns=["opinion_id", "author", "recommendation","stars","content","useful","useless","publish_date","purchase_date","pros","cons"])
+
+    sort = request.args.get('sort', 'opinion_id')
+    reverse = (request.args.get('direction', 'asc') == 'desc')
+
+    df = df.sort_values(by=[sort], ascending=reverse)
+    output_dict = df.to_dict(orient='records')
+
+    table = SortableTable(product_id,output_dict,
+                          sort_by=sort,
+                          sort_reverse=reverse,)
+    table= table.__html__()
+
+    
     
 
     return render_template("product.html.jinja", product_id=product_id,table=table)
