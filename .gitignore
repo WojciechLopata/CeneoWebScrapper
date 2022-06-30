@@ -131,3 +131,4 @@ dmypy.json
 .vscod
 # project
 app/opinions/*.*
+app/static/*.*

@@ -42,7 +42,7 @@ class SortableTable(Table):
         return url_for('product',product_id=self.product_id,direction=direction,sort=col_key)
 
 
-# Create a Form Class
+
 class NamerForm(FlaskForm):
 	name = StringField("Podaj ID produktu ", validators=[DataRequired(),Length(max=11,min=6,message="Id które podałeś jest niepoprawne, Spróbuj ponownie")])
 	submit = SubmitField("Podaj")
