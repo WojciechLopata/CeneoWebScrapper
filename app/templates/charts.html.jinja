@@ -1,7 +1,14 @@
 {% extends "base.html.jinja" %}
 {% block content %}
 <button class="btn btn-primary d-flex align-items-start" type="button" onclick="window.location.href='{{ url_for( 'product',product_id=product_id) }}';"> <= Wróć do produktu</button>
-<img src="/static/plots/{{product_id}}_recommendations.png">
+<br>
+<div class="row">
+<div class="col">
+<img src="/static/plots/{{product_id}}_recommendations.png"></div>
+<div class="col">
 <img src="/static/plots/{{product_id}}_stars.png">
+</div>
+</div>
+
 {% endblock content %}
    
